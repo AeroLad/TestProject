@@ -1,0 +1,33 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+AnalysePage	GenericPage.py	/^    def AnalysePage(self, LocalDict):$/;"	m	class:GenericPage
+AsyncProcess	GenericPage.py	/^    def AsyncProcess(self,SharedDict):$/;"	m	class:GenericPage
+BadINIFiles	Scraper2.py	/^BadINIFiles     = []$/;"	v
+Email	GenericPage.py	/^    def Email(self):$/;"	m	class:GenericPage
+GenericPage	GenericPage.py	/^class GenericPage(object):$/;"	c
+Gumtree	Gumtree.py	/^class Gumtree(GenericPage.GenericPage):$/;"	c
+LoadConfigFile	GenericPage.py	/^    def LoadConfigFile(self):$/;"	m	class:GenericPage
+LoadedINIFiles	Scraper2.py	/^LoadedINIFiles  = []$/;"	v
+StartProcess	GenericPage.py	/^    def StartProcess(self):$/;"	m	class:GenericPage
+WebPages	Scraper2.py	/^    WebPages = []$/;"	v
+__init__	GenericPage.py	/^    def __init__(self):$/;"	m	class:GenericPage
+__init__	Gumtree.py	/^    def __init__(self):$/;"	m	class:Gumtree
+bExit	Scraper.py	/^            bExit = True$/;"	v
+bExit	Scraper.py	/^    bExit = False$/;"	v
+configFile	Scraper2.py	/^        configFile = webpage.LoadConfigFile()$/;"	v
+fnGumtreeAd	Scraper.py	/^def fnGumtreeAd(i,shared_list):$/;"	f
+iniFiles	Scraper2.py	/^    iniFiles = []$/;"	v
+klass	Scraper2.py	/^                klass   = getattr(module,webpage.type)$/;"	v
+manager	Scraper.py	/^    manager = Manager()$/;"	v
+module	Scraper2.py	/^                module  = __import__(webpage.type)$/;"	v
+p	Scraper.py	/^        p = Process(target=fnGumtreeAd, args=(i,shared_list))$/;"	v
+processes	Scraper.py	/^    processes = []$/;"	v
+scriptDirectory	Scraper2.py	/^scriptDirectory = os.path.join(os.path.dirname(os.path.realpath(__file__)),'')$/;"	v
+shared_list	Scraper.py	/^    shared_list = manager.list()$/;"	v
+termCounter	Scraper.py	/^        termCounter = 0$/;"	v
+webpage	Scraper2.py	/^                webpage = klass()$/;"	v
+webpage	Scraper2.py	/^        webpage = GenericPage.GenericPage()$/;"	v
