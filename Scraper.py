@@ -1,71 +1,77 @@
-from bs4 import BeautifulSoup
-import urllib.request
+import glob
+import os
 import time
-from multiprocessing import Process, Manager
+import configparser
 
-def fnGumtreeAd(i,shared_list):
-    url = "https://www.gumtree.com.au/s-laptops/melbourne/page-"+str(i)+"/c18553l3001317"
-    req = urllib.request.Request(
-        url,
-        data=None,
-        headers={
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36'
-        }
-    )
+def fnLoadConfigFile(strFile):
+    """Load Configuration INI file.
 
-    result = urllib.request.urlopen(req)
-    page = result.read().decode('utf-8')
+    Args:
+        strFile (str):  Full path to INI file.
 
-    soup = BeautifulSoup(page, "lxml")
+    Returns:
+        configparser.ConfigParser: Parsed configuration file object.
+        None: If unsuccesful.
+    """
 
-    ads = soup.findAll('a', {"class": "user-ad-row link link--base-color-inherit link--hover-color-none link--no-underline"})
-
-    for ad in ads:
-        link = "https://www.gumtree.com.au"+ad.attrs['href']
-        title = ad.find("p"     , {"class":"user-ad-row__title"}).string
-        try:
-            price = ad.find("span"  , {"class":"user-ad-price__price"}).string
-        except:
-            price = 1000.0
-        try:
-            desc  = ad.find("p"     , {"class":"user-ad-row__description"}).string
-        except:
-            desc = ""
-
-        title = str(title)
-        price = str(price)
-        price = price.replace(",","")
-        price = float(price[1:])
-        desc  = str(desc.lower())
-
-        #if False:
-        if price <= 50.0:
-            #print(title)
-            #print("\tPrice:\t"+str(price))
-            #print("\tLink:\t"+str(link))
-            #print()
-            shared_list.append(title)
-
-        print("Page:\t"+str(i)+" processed")
+    try:
+        if os.path.isfile(strFile) == False:
+            return None
+        objConfigFile = configparser.ConfigParser()
+        objConfigFile.read(strFile)
+        return objConfigFile
+    except Exception as e:
+        print("Error loading INI file: "+strFile)
+        print(e)
+        print(str(e))
+        print(e.args)
         return None
 
-if __name__ == '__main__':
-    manager = Manager()
-    shared_list = manager.list()
-    processes = []
-    for i in range(1,50):
-        p = Process(target=fnGumtreeAd, args=(i,shared_list))
-        p.start()
-        processes.append(p)
+def fnLoadClass(strClass,objConfigFile):
+    """Load specific class.
 
-    bExit = False
-    while bExit != True:
-        termCounter = 0
-        for process in processes:
-            if process.is_alive() == False:
-                termCounter += 1
-        if termCounter == len(processes):
-            bExit = True
-        time.sleep(1)
+    Args:
+        strClass (str):  Name of class to be loaded.
+        objConfigFile (configparser.ConfigParser): Parsed configuration file object.
 
-    print(shared_list)
+    Returns:
+        Class (obj): Class instance of requested class.
+        None: If unsuccesful.
+    """
+    try:
+        module  = __import__("Modules."+strClass,fromlist=["*"])
+        klass   = getattr(module,strClass)
+        obj     = klass(objConfigFile)
+        return  obj
+    except Exception as e:
+        print("Error loading module in: "+strFile)
+        print("Specified module: "+strClass)
+        print(e)
+        print(str(e))
+        print(e.args)
+        return None
+
+if __name__ == "__main__":
+
+    scriptDirectory = os.path.join(os.path.dirname(os.path.realpath(__file__)),'')
+
+    while True:
+        start_time = time.time()
+        WebPages = []
+        for dirpath, subdirs, files in os.walk(scriptDirectory):
+            for strIniFile in files:
+                if strIniFile.endswith(".ini"):
+                    strIniFile = os.path.join(dirpath,strIniFile)
+                    objConfigFile = fnLoadConfigFile(strIniFile)
+                    if objConfigFile != None:
+                        strClassType    = objConfigFile['Page']['type']
+                        objClass = fnLoadClass(strClassType,objConfigFile)
+                        if objClass != None:
+                            WebPages.append(objClass)
+
+        for WebPage in WebPages:
+            if WebPage.is_alive(): WebPage.join()
+
+        end_time = time.time()
+        print("%i Pages processed in %.2fs" %(len(WebPages),end_time - start_time))
+        time.sleep(10)
